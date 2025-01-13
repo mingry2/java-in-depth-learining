@@ -3,7 +3,6 @@ package charset;
 import static java.nio.charset.StandardCharsets.*;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class EncodingMain1 {

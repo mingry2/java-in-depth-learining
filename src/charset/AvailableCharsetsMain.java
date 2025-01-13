@@ -16,11 +16,11 @@ public class AvailableCharsetsMain {
 
         System.out.println("=====");
         // 문자로 조회(대소문자 구분X-> MS949, ms949, x-windows-949
-        Charset charset1 = Charset.forName("MS949");
-        System.out.println("charset1: " + charset1);
+        Charset charset = Charset.forName("MS949");
+        System.out.println("charset: " + charset);
 
         // 별칭 조회
-        Set<String> aliases = charset1.aliases();
+        Set<String> aliases = charset.aliases();
         for (String alias : aliases) {
             System.out.println("alias: " + alias);
         }

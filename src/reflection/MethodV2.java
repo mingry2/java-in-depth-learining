@@ -1,0 +1,27 @@
+package reflection;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import reflection.data.BasicData;
+
+public class MethodV2 {
+
+    public static void main(String[] args)
+        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // 정적 메서드 호출 - 일반인 메서드 호출(코드를 변경하지 않는 이상 정적)
+        BasicData helloInstance = new BasicData();
+        helloInstance.call();
+
+        // 동적 메서드 호출 - 리플렉션 사용
+        Class<? extends BasicData> helloClass = helloInstance.getClass();
+        String methodName = "hello";
+
+        // 메서드 이름을 변수로 변경할 수 있다.
+        Method method1 = helloClass.getDeclaredMethod(methodName, String.class);
+        Object returnValue = method1.invoke(helloInstance, "hi");
+        System.out.println("returnValue = " + returnValue);
+
+
+    }
+
+}

@@ -21,7 +21,6 @@ public class BasicV2 {
         System.out.println("basicData.getModifiers() = " + modifiers);
         System.out.println("isPublic = " + Modifier.isPublic(modifiers));
         System.out.println("Modifier.toString() = " + Modifier.toString(modifiers));
-
     }
 
 }

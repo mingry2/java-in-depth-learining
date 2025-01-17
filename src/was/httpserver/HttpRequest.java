@@ -1,5 +1,7 @@
 package was.httpserver;
 
+import static util.MyLogger.log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -18,9 +20,11 @@ public class HttpRequest {
         parseRequestLine(reader);
         parseHeaders(reader);
         // 메시지 바디는 이후에 처리
+        parseBody(reader);
     }
 
     // GET /search?q=hello HTTP/1.1
+
     private void parseRequestLine(BufferedReader reader) throws IOException {
         String requestLine = reader.readLine();
         if (requestLine == null) {
@@ -37,9 +41,9 @@ public class HttpRequest {
             parseQueryParameters(pathParts[1]);
         }
     }
-
     // q=hello
     // key1=value1&key2=value2&key3=value3
+
     private void parseQueryParameters(String queryString) {
         String[] split = queryString.split("&");
         for (String param : split) {
@@ -49,16 +53,36 @@ public class HttpRequest {
             queryParameters.put(key, value);
         }
     }
-
     // host: localhost:12345
     // Connection: keep-alive
     // Cache-Control: max-age=0
     //
+
     private void parseHeaders(BufferedReader reader) throws IOException {
         String line;
         while (!(line = reader.readLine()).isEmpty()) {
             String[] headerParts = line.split(":");
             headers.put(headerParts[0].trim(), headerParts[1].trim());
+        }
+    }
+
+    private void parseBody(BufferedReader reader) throws IOException {
+        if (!headers.containsKey("Content-Length")) {
+            return;
+        }
+
+        int contentLength = Integer.parseInt(headers.get("Content-Length"));
+        char[] bodyChars = new char[contentLength];
+        int read = reader.read(bodyChars);
+        if (read != contentLength) {
+            throw new IOException("Fail to read entire body. Expected " + contentLength + " bytes, but read " + read);
+        }
+        String body = new String(bodyChars);
+        log("HTTP Message Body : " + body);
+
+        String contentType = headers.get("Content-Type");
+        if ("application/x-www-form-urlencoded".equals(contentType)) {
+            parseQueryParameters(body);
         }
     }
 
